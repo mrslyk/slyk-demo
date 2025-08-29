@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
+import Link from 'next/link';
 import { User } from 'types/user';
 import { useClickOutside } from 'utils/use-click-outside';
 import { Container } from './container';
@@ -18,19 +19,36 @@ export function Navbar({ user }: Props) {
     setProfileMenuVisible(false);
   });
 
+  const isActive = (path: string) => router.pathname === path;
+
   return (
     <nav className='w-full bg-slate-800'>
       <Container>
         <div className='relative flex items-center justify-between h-16 border-b border-slate-600'>
           <div className='flex-1'>
             <div className='hidden sm:flex gap-4'>
-              <a
-                href='#'
-                className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                aria-current='page'
-              >
-                Dashboard
-              </a>
+              <Link href='/overview'>
+                <a
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActive('/overview')
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  Dashboard
+                </a>
+              </Link>
+              <Link href='/betting'>
+                <a
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActive('/betting')
+                      ? 'bg-gray-900 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  Betting
+                </a>
+              </Link>
             </div>
           </div>
           <div ref={profileMenuRef}>
