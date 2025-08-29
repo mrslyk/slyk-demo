@@ -111,6 +111,88 @@ const Betting: NextPage<Props> = props => {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ctx => {
   const { req, res } = ctx;
+  
+  // For demo purposes, if no API key is configured, show demo data without authentication
+  if (!process.env.SLYK_API_KEY || process.env.SLYK_API_KEY === 'demo_key_for_testing') {
+    const sampleMarkets: Array<BettingMarket> = [
+      {
+        id: 'market_1',
+        name: 'Premier League: Manchester United vs Liverpool',
+        description: 'Match winner for the Premier League fixture',
+        assetCode: 'USD',
+        status: 'open',
+        type: BetType.Match,
+        endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        options: [
+          { id: 'option_1', name: 'Manchester United', odds: '2.50' },
+          { id: 'option_2', name: 'Draw', odds: '3.20' },
+          { id: 'option_3', name: 'Liverpool', odds: '1.95' },
+        ],
+        thumbnail: {
+          url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=300&fit=crop',
+        },
+      },
+      {
+        id: 'market_2',
+        name: 'Champions League Winner 2024',
+        description: 'Outright winner of the 2024 Champions League tournament',
+        assetCode: 'USD',
+        status: 'open',
+        type: BetType.Outright,
+        endsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        options: [
+          { id: 'option_4', name: 'Manchester City', odds: '3.50' },
+          { id: 'option_5', name: 'Real Madrid', odds: '4.00' },
+          { id: 'option_6', name: 'Barcelona', odds: '5.50' },
+          { id: 'option_7', name: 'Bayern Munich', odds: '6.00' },
+        ],
+        thumbnail: {
+          url: 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=400&h=300&fit=crop',
+        },
+      },
+      {
+        id: 'market_3',
+        name: 'NBA Finals: Lakers vs Celtics',
+        description: 'Game 1 winner of the NBA Finals series',
+        assetCode: 'USD',
+        status: 'open',
+        type: BetType.Match,
+        endsAt: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
+        options: [
+          { id: 'option_8', name: 'Los Angeles Lakers', odds: '1.85' },
+          { id: 'option_9', name: 'Boston Celtics', odds: '2.15' },
+        ],
+        thumbnail: {
+          url: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop',
+        },
+      },
+    ];
+
+    return {
+      props: {
+        user: {
+          id: 'demo_user',
+          email: 'demo@example.com',
+          primaryWalletId: 'demo_wallet',
+          image: null,
+          firstName: 'Demo',
+          lastName: 'User',
+        },
+        assets: {
+          USD: {
+            code: 'USD',
+            symbol: '$',
+            decimals: 2,
+            name: 'US Dollar'
+          }
+        },
+        balances: [{ assetCode: 'USD', amount: '1000.00' }],
+        markets: sampleMarkets,
+        userBets: [],
+      },
+    };
+  }
+
   const slyk = createSlykClient({
     apikey: process.env.SLYK_API_KEY,
     host: 'api.stg.slyk.io',
